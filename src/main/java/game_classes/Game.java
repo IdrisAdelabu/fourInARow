@@ -238,7 +238,7 @@ public class Game {
 			while (noWinner) {
 				if (board.boardFull()) {// provide condition)
 					System.out.println("Board is now full. Game Ends.");
-					return;
+					break;
 				}
 
 				Player currentPlayer = players[currentPlayerIndex];
