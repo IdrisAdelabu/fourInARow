@@ -45,7 +45,6 @@ public class Game {
 
 
     public Game() {
-        // Let's default it two players for now. Later, you can improve upon this to allow the game creator to choose how many players are involved.
         this.players = new Player[2];// complete line.
         this.board = new Board();// complete line
     }
@@ -58,8 +57,7 @@ public class Game {
 		"Bright Red", "Bright Green"};
     	boolean cond = true;
     	int numOfPlayers = 0;
-//		this.winCondition = 4;
-    	
+
     	while (cond) {
     	
 	    	try {
@@ -82,9 +80,7 @@ public class Game {
 		Set<String> selectedToken = new HashSet<>();
     	
     	for (int i = 0; i < numOfPlayers; i++) {
-//    		cond = true;
 
-			// selecting player name
     		do {
     			int check = 0;
     			System.out.println("Enter player " + (i + 1) + "'s name: ");
@@ -97,11 +93,9 @@ public class Game {
     				}
     				check++;
     			}
-    			cond = (check != 0 || i == 0) ? false : true;
+    			cond = check == 0 && i != 0;
     		} while (cond);
 
-			// selecting player token
-			// todo implement exception check for invalid input
 			do {
 
 				try {
@@ -136,8 +130,6 @@ public class Game {
 				}
 			} while (cond);
 
-			// selecting token colour
-			// todo implement exception check for invalid input
 			do {
 				try {
 					System.out.println("Enter corresponding number to select player " + (i + 1) + "'s colour: ");
@@ -171,9 +163,6 @@ public class Game {
 				}
 			} while (cond);
 		}
-    	
-        /** add logic to prevent a user from giving a second name that's equal to the first. Allow the user to try as long as the names are not different.*/
-		//set up win condition
 
 		do {
 			try {
@@ -198,9 +187,7 @@ public class Game {
 			}
 		} while(cond);
 
-        // set up the board using the appropriate method
         board.boardSetUp(this.winCondition);
-        // print the board the using appropriate method
         board.printBoard();
     }
 
@@ -212,11 +199,9 @@ public class Game {
         int col = currentPlayer.makeMove();
         while (!board.addToken(col, colorMap.get(currentPlayer.getColour()) + tokenMap.get(currentPlayer.getToken())
 				+ colorMap.get("reset"))) {
-           // call board method to add token.
         	col = currentPlayer.makeMove();
         }
 		turnHistory.put(currentPlayer.getName(), col);
-        // print board
         board.printBoard();
     }
 
@@ -236,13 +221,12 @@ public class Game {
 			int currentPlayerIndex = 0;
 
 			while (noWinner) {
-				if (board.boardFull()) {// provide condition)
+				if (board.boardFull()) {
 					System.out.println("Board is now full. Game Ends.");
 					break;
 				}
 
 				Player currentPlayer = players[currentPlayerIndex];
-				// Override default tostring for Player class
 				System.out.println("It is player " + currentPlayer.getPlayerNumber() + "'s turn. " + currentPlayer);
 				boolean undo;
 				do {
@@ -258,7 +242,6 @@ public class Game {
 					printWinner(currentPlayer);
 					noWinner = false;
 				} else {
-					// reassign the variable to allow the game to continue. Note the index would wrap back to the first player if we are at the end.
 					currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
 				}
 			}

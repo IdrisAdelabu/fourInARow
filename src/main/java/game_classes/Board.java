@@ -15,9 +15,6 @@ public class Board {
 	
 	private String[][] board;
 	private Scanner scanner = new Scanner(System.in);
-	
-	
-    // add instance variables
 
     public void boardSetUp(int winCondition) {
         System.out.println("------ Board Set up -------");
@@ -64,12 +61,9 @@ public class Board {
     		}
         }
         scanner.nextLine();
-        // receive column value
-        this.board = new String[rows][columns];// initialize a row by column array;
+        this.board = new String[rows][columns];
 
-        // initialize empty board with dashes (-)
         for (String[] row : board) {
-            // fill up each row of the board with dashes
         	for (int i = 0; i < columns; i++) {
         		row[i] = "-";
         	}
@@ -77,20 +71,24 @@ public class Board {
     }
 
     public void printBoard() {
+        String[] colPosition = new String[board[0].length];
+        for(int i = 0; i < board[0].length; i++) {
+            colPosition[i] = "" + i;
+        }
+        System.out.println(Arrays.toString(colPosition));
         for (String[] row : board) {
             System.out.println(Arrays.toString(row));
         }
     }
 
     public boolean columnFull(int col) {
-        if (board[0][col].equals("-")) {// check if the column is full by just checking the 0'th row's value)
+        if (board[0][col].equals("-")) {
             return false;
         }
         return true;
     }
 
     public boolean boardFull() {
-        // True understanding this code.
         for (int i = 0; i < this.board[0].length; i++) {
             if (!columnFull(i)) {
                 return false;
@@ -112,11 +110,8 @@ public class Board {
 			}
 			int rowToAddToken = board.length - 1;
 
-			while (rowToAddToken >= 0) {// what condition should be here to allow you to keep searching for the right
-										// row level of the board to place the token? )
+			while (rowToAddToken >= 0) {
 				if (board[rowToAddToken][colToAddToken].equals("-")) {
-					// You now know the right row and column to place the token. Place it and then
-					// return true.
 					board[rowToAddToken][colToAddToken] = token;
 					System.out.println("Token set successfully");
 					return true;
@@ -140,8 +135,6 @@ public class Board {
 
         while (rowToAddToken < board.length) {
             if (board[rowToAddToken][colToAddToken].equals(token)) {
-                // You now know the right row and column to place the token. Place it and then
-                // return true.
                 board[rowToAddToken][colToAddToken] = "-";
                 System.out.println("Token removed successfully");
                 return true;
@@ -161,13 +154,16 @@ public class Board {
     public boolean checkVertical(String token, int winCondition) {
         boolean cond = false;
         for (int col = 0; col < board[0].length; col++) {
-            for (int row = 0; row < board.length - (winCondition - 1); row++) {
+            for (int row = 0; row <= board.length - winCondition; row++) {
                 if (board[row][col].equals(token)) {
                     cond = true;
                     for (int i = 1; i < winCondition; i++) {
                         cond = cond && board[row][col].equals(board[row + i][col]);
+                        if (!cond) break;
                     }
+                    if (cond) break;
                 }
+                if (cond) break;
             }
         }
         return cond;
@@ -175,8 +171,26 @@ public class Board {
 
     public boolean checkHorizontal(String token, int winCondition) {
         boolean cond = false;
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col <= board[0].length - winCondition; col++) {
+                if (board[row][col].equals(token)) {
+                    cond = true;
+                    for (int i = 1; i < winCondition; i++) {
+                        cond = cond && board[row][col].equals(board[row][col + i]);
+                        if (!cond) break;
+                    }
+                }
+                if (cond) break;
+            }
+            if (cond) break;
+        }
+        return cond;
+    }
+
+    /*public boolean checkHorizontal(String token, int winCondition) {
+        boolean cond = false;
         for (int col = 0; col < board[0].length - (winCondition - 1); col++) {
-            // try implementing this by being inspired by the checkVertical logic. Note avoid off by 1 errors. Also remember that you are now checking across columns within each row this time.
+
             for (String[] strings : board) {
                 if (strings[col].equals(token)) {
                     cond = true;
@@ -187,7 +201,7 @@ public class Board {
             }
         }
         return cond;
-    }
+    }*/
 
     public boolean checkLeftDiagonal(String token, int winCondition) {
         boolean cond = false;
@@ -197,9 +211,12 @@ public class Board {
                     cond = true;
                     for (int i = 1; i < winCondition; i++) {
                         cond = cond && board[row][col].equals(board[row + i][col + i]);
+                        if (!cond) break;
                     }
                 }
+                if (cond) break;
             }
+            if (cond) break;
         }
         return cond;
     }
@@ -213,9 +230,12 @@ public class Board {
                     cond = true;
                     for (int i = 1; i < winCondition; i++) {
                         cond = cond && board[row][col].equals(board[row + i][col - i]);
+                        if (!cond) break;
                     }
                 }
+                if (cond) break;
             }
+            if (cond) break;
         }
         return cond;
     }
